@@ -1,7 +1,59 @@
 function findTitlesPublishedOn(date, blogPostTitles) {
-  //It should return all blog posts titles that were published on a specified date using binary search
+  const targetDate = new Date(date).toISOString().split("T")[0];
+
+  // Helper function to perform binary search for the starting index
+  function findStartIndex(blogPostTitles, targetDate) {
+    let left = 0;
+    let right = blogPostTitles.length - 1;
+    while (left < right) {
+      const mid = Math.floor((left + right) / 2);
+      const midDate = new Date(blogPostTitles[mid].published_on)
+        .toISOString()
+        .split("T")[0];
+      if (midDate < targetDate) {
+        left = mid + 1;
+      } else {
+        right = mid;
+      }
+    }
+    return left;
+  }
+
+  // Helper function to perform binary search for the ending index
+  function findEndIndex(blogPostTitles, targetDate) {
+    let left = 0;
+    let right = blogPostTitles.length - 1;
+    while (left < right) {
+      const mid = Math.floor((left + right + 1) / 2);
+      const midDate = new Date(blogPostTitles[mid].published_on)
+        .toISOString()
+        .split("T")[0];
+      if (midDate > targetDate) {
+        right = mid - 1;
+      } else {
+        left = mid;
+      }
+    }
+    return right;
+  }
+
+  const startIndex = findStartIndex(blogPostTitles, targetDate);
+  const endIndex = findEndIndex(blogPostTitles, targetDate);
+
+  const result = [];
+  for (let i = startIndex; i <= endIndex; i++) {
+    const postDate = new Date(blogPostTitles[i].published_on)
+      .toISOString()
+      .split("T")[0];
+    if (postDate === targetDate) {
+      result.push(blogPostTitles[i].title);
+    }
+  }
+
+  return result;
 }
 
+// Example usage
 const blogPostTitles = [
   {
     title: "Mastering the Art of Ramen: A Beginner's Guide",
@@ -164,30 +216,6 @@ const blogPostTitles = [
   },
   {
     title: "How to Stay Healthy During Finals Week",
-    published_on: "2026-06-01T21:00:00Z",
-  },
-  {
-    title: "The Ultimate Guide to College Dorm Life",
-    published_on: "2026-07-01T22:00:00Z",
-  },
-  {
-    title: "How to Avoid Procrastination in College",
-    published_on: "2026-08-01T23:00:00Z",
-  },
-  {
-    title: "The Best College Apps You Need to Download",
-    published_on: "2026-09-01T09:00:00Z",
-  },
-  {
-    title: "How to Balance a Part-Time Job and School",
-    published_on: "2026-10-01T10:00:00Z",
-  },
-  {
-    title: "Top 10 Places to Study on Campus",
-    published_on: "2026-11-01T11:00:00Z",
-  },
-  {
-    title: "How to Prepare for Graduate School",
     published_on: "2026-12-01T12:00:00Z",
   },
 ];
